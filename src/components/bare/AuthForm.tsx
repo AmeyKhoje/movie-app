@@ -8,6 +8,7 @@ import MovieAppInput from '../form-elements/input/MovieAppInput';
 import Button from '../form-elements/button/Button';
 import AuthContext from 'src/context/AuthContext';
 import { User } from 'src/interfaces/Schemas';
+import firebase from 'src/firebase/Config';
 
 const AuthForm = () => {
   const resolver = useYupValidationResolver(userSchema);
@@ -28,7 +29,19 @@ const AuthForm = () => {
   };
 
   const handleFormSubmit = (data: any) => {
-    console.log(data);
+    const database = firebase.firestore();
+    const dbRef = database.collection('users').add(data);
+    dbRef
+      .then((success) => {
+        reset({
+          email: '',
+          password: '',
+          userName: '',
+        });
+      })
+      .catch((error) => {
+        console.log('error', error);
+      });
   };
 
   return (

@@ -8,14 +8,12 @@ import { AuthModes } from 'src/interfaces/Component';
 const Auth = () => {
   const [mode, setMode] = useState<AuthModes>('LOGIN');
 
-  const authHandler = useCallback((mode: AuthModes) => {}, []);
-
   const modeHandler = useCallback(() => {
     setMode(mode === 'LOGIN' ? 'REGISTER' : 'LOGIN');
   }, [mode]);
 
   return (
-    <AuthContext.Provider value={{ mode, authHandler, modeHandler }}>
+    <AuthContext.Provider value={{ mode, modeHandler }}>
       <AuthCard>
         <AuthForm />
       </AuthCard>
