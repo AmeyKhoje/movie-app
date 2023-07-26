@@ -4,7 +4,7 @@ import { MovieAppInputProps } from 'src/interfaces/FormComponents';
 import movieAppInputStyles from './MovieAppInputStyles';
 
 const MovieAppInput = ({
-  error,
+  errorList,
   name,
   onChange,
   value,
@@ -14,7 +14,7 @@ const MovieAppInput = ({
   classes,
   ...rest
 }: MovieAppInputProps) => {
-  console.log(classes);
+  console.log(errorList);
 
   return (
     <div className={`${classes.container}`}>
@@ -27,9 +27,10 @@ const MovieAppInput = ({
         inputProps={{
           className: `${classes?.root}`,
         }}
+        onChange={onChange}
         {...rest}
       />
-      {error && <span>{error.message}</span>}
+      {errorList && <span>{errorList.message}</span>}
     </div>
   );
 };

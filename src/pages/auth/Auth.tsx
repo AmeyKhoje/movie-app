@@ -1,11 +1,25 @@
-import LoginForm from 'src/components/bare/LoginForm';
+import { useCallback, useState } from 'react';
+import AuthForm from 'src/components/bare/AuthForm';
+import Button from 'src/components/form-elements/button/Button';
 import AuthCard from 'src/components/ui-emenets/auth-card/AuthCard';
+import AuthContext from 'src/context/AuthContext';
+import { AuthModes } from 'src/interfaces/Component';
 
 const Auth = () => {
+  const [mode, setMode] = useState<AuthModes>('LOGIN');
+
+  const authHandler = useCallback((mode: AuthModes) => {}, []);
+
+  const modeHandler = useCallback(() => {
+    setMode(mode === 'LOGIN' ? 'REGISTER' : 'LOGIN');
+  }, [mode]);
+
   return (
-    <AuthCard>
-      <LoginForm />
-    </AuthCard>
+    <AuthContext.Provider value={{ mode, authHandler, modeHandler }}>
+      <AuthCard>
+        <AuthForm />
+      </AuthCard>
+    </AuthContext.Provider>
   );
 };
 

@@ -6,4 +6,4 @@ import * as yup from 'yup';
 //   password: string;
 // };
 
-interface User extends yup.InferType<typeof userSchema> {}
+export interface User extends yup.InferType<typeof userSchema> {}

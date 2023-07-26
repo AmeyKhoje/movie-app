@@ -1,5 +1,10 @@
 import { ReactNode } from 'react';
-import { ButtonBaseProps, InputProps, PaperOwnProps } from '@mui/material';
+import {
+  ButtonBaseProps,
+  InputProps,
+  PaperOwnProps,
+  InputBaseProps,
+} from '@mui/material';
 import { WithStyles } from '@mui/styles';
 import { buttonStyles } from 'src/components/form-elements/button/ButtonStyles';
 import { FieldError } from 'react-hook-form';
@@ -17,12 +22,9 @@ export type ControlledInputProps = InputProps & {
   control: any;
 };
 
-export type MovieAppInputProps = Omit<InputProps, 'onChange'> &
+export type MovieAppInputProps = InputBaseProps &
   WithStyles<typeof movieAppInputStyles> & {
-    error: FieldError;
-    name: string;
-    onChange: void;
-    value: string | number;
+    errorList: FieldError;
   };
 
 export type AuthCardProps = PaperOwnProps &

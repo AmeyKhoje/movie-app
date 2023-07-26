@@ -7,10 +7,12 @@ const authCardStyles = ({ spacing, palette, typography }: Theme) =>
       width: '50rem',
       padding: spacing('5rem', '3rem'),
       backgroundColor: palette.primary.light,
-      marginTop: '5rem',
+      marginTop: '10rem',
+      borderRadius: '0.8rem',
+      boxShadow: 'none',
     },
     titleWrapper: {
-      paddingBottom: '3rem',
+      paddingBottom: '2rem',
     },
     title: {
       fontWeight: typography.fontWeightBold,

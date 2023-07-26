@@ -7,20 +7,21 @@ const ControlledInput = memo(
     return (
       <Controller
         name={name}
-        render={({
-          field: { name, onChange, value },
-          fieldState: { error },
-        }) => (
-          <Component
-            name={name}
-            onChange={onChange}
-            value={value}
-            error={error}
-            placeholder={placeholder}
-            type={type}
-          />
-        )}
         control={control}
+        render={({ field: { name, onChange, value }, fieldState }) => {
+          console.log(fieldState);
+
+          return (
+            <Component
+              name={name}
+              onChange={onChange}
+              value={value}
+              error={fieldState?.error}
+              placeholder={placeholder}
+              type={type}
+            />
+          );
+        }}
       />
     );
   }

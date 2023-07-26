@@ -10,6 +10,7 @@ const movieAppInputStyles = (theme: Theme) =>
       color: theme.palette.common.black,
       fontSize: theme.typography.subtitle1.fontSize,
       fontFamily: 'Roboto, sans-serif',
+      borderRadius: '0.5rem',
     },
     muiContainer: {
       width: '100%',

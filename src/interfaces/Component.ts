@@ -4,3 +4,5 @@ import { WithStyles } from '@mui/styles';
 import layoutStyles from 'src/router/layouts/LayoutStyles';
 
 export type LayoutProps = BoxProps & WithStyles<typeof layoutStyles> & {};
+
+export type AuthModes = 'LOGIN' | 'REGISTER';
