@@ -8,9 +8,25 @@ import MovieAppInput from '../form-elements/input/MovieAppInput';
 import Button from '../form-elements/button/Button';
 import AuthContext from 'src/context/AuthContext';
 import { User } from 'src/interfaces/Schemas';
-import firebase from 'src/firebase/Config';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  getDoc,
+  doc,
+  query,
+  where,
+  getFirestore,
+} from 'firebase/firestore/lite';
+import app, { db } from 'src/firebase/Config';
+import { GlobalContextType } from 'src/interfaces/Component';
+import GlobalContext from 'src/context/GlobalContext';
+import { loginUser, saveUser } from 'src/utils/DbActions';
+import { useNavigate } from 'react-router-dom';
 
 const AuthForm = () => {
+  const { handleOpenToast, toastState } =
+    useContext<GlobalContextType>(GlobalContext);
   const resolver = useYupValidationResolver(userSchema);
 
   const { control, reset, handleSubmit } = useForm<User>({
@@ -18,29 +34,80 @@ const AuthForm = () => {
   });
 
   const { mode, modeHandler } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const handleModeChange = () => {
+  const resetForm = () => {
     reset({
       email: '',
       password: '',
       userName: '',
     });
+  };
+
+  const handleModeChange = () => {
+    resetForm();
     modeHandler(mode);
   };
 
-  const handleFormSubmit = (data: any) => {
-    const database = firebase.firestore();
-    const dbRef = database.collection('users').add(data);
-    dbRef
-      .then((success) => {
-        reset({
-          email: '',
-          password: '',
-          userName: '',
+  const handleFormSubmit = async (data: any) => {
+    if (mode === 'LOGIN') {
+      const loginResponse = await loginUser(data);
+      if (loginResponse.success) {
+        handleOpenToast({
+          toastState: {
+            ...toastState,
+            open: true,
+            message: 'Logged in successfully',
+          },
         });
+        navigate('/home', {
+          replace: true,
+        });
+      } else {
+        handleOpenToast({
+          toastState: {
+            ...toastState,
+            open: true,
+            message:
+              'Failed to Login. Please try again later or try registering in case you dont have account',
+          },
+        });
+      }
+      return;
+    }
+    saveUser(data)
+      .then((response: any) => {
+        if (response?.success) {
+          resetForm();
+          handleOpenToast({
+            toastState: {
+              ...toastState,
+              open: true,
+              message: 'User added successfully',
+            },
+          });
+        }
+        if (response?.success === false) {
+          handleOpenToast({
+            toastState: {
+              ...toastState,
+              open: true,
+              message: 'Failed to add user. Please try again later',
+            },
+          });
+        }
       })
-      .catch((error) => {
-        console.log('error', error);
+      .catch((error: any) => {
+        if (!error?.alreadyExists) {
+          resetForm();
+          handleOpenToast({
+            toastState: {
+              ...toastState,
+              open: true,
+              message: 'User already exists. Please login',
+            },
+          });
+        }
       });
   };
 
@@ -74,11 +141,18 @@ const AuthForm = () => {
           variant="PRIMARY"
         />
       </Box>
-      <Button
-        title={`Go to ${mode === 'LOGIN' ? 'Register' : 'Login'}`}
-        variant="LIGHT"
-        onClick={handleModeChange}
-      />
+      <Box
+        justifyContent={'center'}
+        display={'flex'}
+        width={'100%'}
+        paddingTop={'2rem'}
+      >
+        <Button
+          title={`Go to ${mode === 'LOGIN' ? 'Register' : 'Login'}`}
+          variant="LIGHT"
+          onClick={handleModeChange}
+        />
+      </Box>
     </Box>
   );
 };
